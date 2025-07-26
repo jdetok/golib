@@ -37,12 +37,12 @@ func (l *Logger) WriteLog(msg string) error {
 	}
 
 	// pass f & msg to Fprintf to write msg string followed by line break to the file
-	n, err := fmt.Fprintf(f, "-- %s\n", msg)
+	_, err = fmt.Fprintf(f, "-- %s\n", msg)
 	if err != nil {
 		e.Msg = "error writing to log file"
 		return e.BuildErr(err)
 	}
-	fmt.Printf("wrote %d bytes to %s\n", n, l.LogF)
+	// fmt.Printf("wrote %d bytes to %s\n", n, l.LogF)
 	return nil
 }
 
