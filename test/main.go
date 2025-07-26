@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	l, err := logd.InitLogF("testd", "testf")
+	l, err := logd.InitLogger("testd", "testf")
 	if err != nil {
 		fmt.Println(err)
 	}

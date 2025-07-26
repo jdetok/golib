@@ -14,7 +14,7 @@ type Logger struct {
 	LogF string
 }
 
-func InitLogF(dir string, file string) (Logger, error) {
+func InitLogger(dir string, file string) (Logger, error) {
 	e := errd.InitErr()
 	var logd = Logger{
 		Dir:  dir,
