@@ -8,14 +8,17 @@ import (
 )
 
 func main() {
-	var logd = logdeko.Logger{
-		Dir:  "./testlog",
-		File: "test",
-	}
-	if err := logd.MakeLogF(); err != nil {
+	logd, err := logdeko.InitLogF("testd", "testf")
+	if err != nil {
 		fmt.Println(err)
 	}
-	err := logd.WriteLog(fmt.Sprintf("Hello it is %v", time.Now()))
+
+	err = logd.WriteLog(fmt.Sprintf("Hello it is %v", time.Now()))
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = logd.WriteLog(fmt.Sprintf("Hello again it is now %v", time.Now()))
 	if err != nil {
 		fmt.Println(err)
 	}
