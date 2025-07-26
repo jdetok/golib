@@ -1,8 +1,11 @@
 package maild
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/smtp"
+	"os"
+	"strings"
 
 	"github.com/jdetok/golib/getenv"
 	"github.com/jdetok/golib/geterr"
@@ -61,34 +64,51 @@ func (m *MIMEmail) SendBasicEmail() error {
 	return nil
 }
 
-func (m *MIMEmail) Attach(fName string) {
-	m.File = fName
-}
-
-/*
-func AuthGmail() smtp.Auth {
-	getenv.LoadDotEnv()
-	user := getenv.EnvStr("GMAIL_SNDR")
-	pw := getenv.EnvStr("GMAIL_PASS")
-	addr := getenv.EnvStr("GMAIL_HOST")
-	return smtp.PlainAuth("", user, pw, addr)
-}
-
-
-func SendBasicEmail(subject, body string) error {
+func (m *MIMEmail) MakeMIMEMsg(fName string) error {
 	e := geterr.InitErr()
-	auth := AuthGmail()
+	atch, err := m.Attach(fName)
+	if err != nil {
+		e.Msg = fmt.Sprintf("error attaching file at %s", fName)
+		return e.BuildErr(err)
+	}
+	bndry := "bndry-" + fName
+	m.Mesg = strings.Join([]string{
+		"From: " + m.User,
+		"To: " + strings.Join(m.MlTo, ", "),
+		"Subject: " + m.Subj,
+		"MIME-Version: 1.0",
+		"Content-Type: multipart/mixed; boundary=" + bndry,
+		"",
+		"--" + bndry,
+		"Content-Type: text/plain; charset=utf-8",
+		"Content-Transfer-Encoding: 7bit",
+		"",
+		m.Body,
+		"",
+		"--" + bndry,
+		"Content-Type: application/octet-stream",
+		fmt.Sprintf("Content-Disposition: attachment; filename=\"%s\"", m.File),
+		"Content-Transfer-Encoding: base64",
+		"",
+		atch,
+		"--" + bndry + "--",
+		"",
+	}, "\r\n")
+	return nil
+}
 
-	msg := MakeEmail(subject, body)
-	err := smtp.SendMail(
-		fmt.Sprintf(
-			"%s:%s", addr, getenv.EnvStr("GMAIL_PORT")),
-		auth,
-		user,
-		[]string{user, "jdeko17@gmail.com", "jdekock17@gmail.com"},
-		[]byte(msg),
-	)
+func (m *MIMEmail) SendMIMEEmail(fName string) error {
+	e := geterr.InitErr()
 
+	m.AuthGmail()
+	err := m.MakeMIMEMsg(fName)
+	if err != nil {
+		e.Msg = fmt.Sprintf(
+			"failed to create MIME msg with file attached at %s", fName)
+		return e.BuildErr(err)
+	}
+
+	err = smtp.SendMail(m.Addr, m.Auth, m.User, m.MlTo, []byte(m.Mesg))
 	if err != nil {
 		e.Msg = "error sending email"
 		return e.BuildErr(err)
@@ -96,7 +116,30 @@ func SendBasicEmail(subject, body string) error {
 	return nil
 }
 
-func MakeEmail(subject string, body string) string {
-	return fmt.Sprintf("Subject: %s\n%s", subject, body)
+func (m *MIMEmail) Attach(fName string) (string, error) {
+	e := geterr.InitErr()
+
+	m.File = fName
+	// read file at fName as []byte
+	f, err := os.ReadFile(m.File)
+	if err != nil {
+		e.Msg = fmt.Sprintf("error reading file at %s", m.File)
+		return "", e.BuildErr(err)
+	}
+
+	// encode bytes to base64 string
+	enc := base64.StdEncoding.EncodeToString(f)
+	return SplitFileLines(76, enc, "\r\n"), nil
 }
-*/
+
+func SplitFileLines(cLen int, body, delim string) string {
+	var b strings.Builder
+	for len(body) > cLen {
+		b.WriteString(body[:cLen])
+		b.WriteString(delim)
+		body = body[cLen:]
+	}
+	b.WriteString(body)
+	b.WriteString(delim)
+	return b.String()
+}

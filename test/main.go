@@ -20,32 +20,7 @@ func main() {
 		"Testing the body!!!!",
 	)
 
-	if err := m.SendBasicEmail(); err != nil {
+	if err := m.SendMIMEEmail(l.LogF); err != nil {
 		fmt.Println(err)
 	}
-
-	// m.Attach(l.LogF)
-	// fmt.Println(m.File)
-
-	// err := maild.SendBasicEmail("another test subject",
-	// 	"NEW STYLE!this is my test body")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	/*
-		logd, err := logdeko.InitLogF("testd", "testf")
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		err = logd.WriteLog(fmt.Sprintf("Hello it is %v", time.Now()))
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		err = logd.WriteLog(fmt.Sprintf("Hello again it is now %v", time.Now()))
-		if err != nil {
-			fmt.Println(err)
-		}
-	*/
 }
