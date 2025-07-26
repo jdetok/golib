@@ -11,37 +11,37 @@ import (
 )
 
 func LoadDotEnv() error {
-	e := geterr.Err{Func: "getenv.LoadDotEnv()"}
+	e := geterr.InitErr()
 	if err := godotenv.Load(); err != nil {
-		e.Msg = "*** FATAL: failed to load .env variabels"
+		e.Msg = "failed to load .env variabels"
 		return e.BuildErr(err)
 	}
 	return nil
 }
 
 func GetEnvStr(key string) (string, error) {
-	e := geterr.Err{Func: "GetEnvStr()"}
+	e := geterr.InitErr()
 	val, ok := os.LookupEnv(key)
 	if !ok {
-		e.Msg = fmt.Sprintf("*** FATAL: couldn't key value for variable '%s'", key)
-		return "", e.BuildErr(errors.New("GetEnvStr() error"))
+		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)
+		return "", e.BuildErr(errors.New(e.Msg))
 	}
 	return val, nil
 }
 
 func GetEnvInt(key string) (int, error) {
-	e := geterr.Err{Func: "GetEnvInt()"}
+	e := geterr.InitErr()
 	val, ok := os.LookupEnv(key)
 	if !ok {
-		e.Msg = fmt.Sprintf("*** FATAL: couldn't key value for variable '%s'", key)
-		return 0, e.BuildErr(errors.New("GetEnvStr() error"))
+		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)
+		return 0, e.BuildErr(errors.New(e.Msg))
 	}
 
 	// convert key from string to int
 	valAsInt, err := strconv.Atoi(val)
 	if err != nil {
-		e.Msg = fmt.Sprintf("*** FATAL: couldn't key value for variable '%s'", key)
-		return 0, e.BuildErr(errors.New("error converting to int"))
+		e.Msg = fmt.Sprintf("couldn't convert '%s' value to int", key)
+		return 0, e.BuildErr(errors.New(e.Msg))
 	}
 	return valAsInt, nil
 }

@@ -1,21 +1,14 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 
-	"github.com/jdetok/golib/geterr"
+	"github.com/jdetok/golib/getenv"
 )
 
 func main() {
-	err := testErr()
+	_, err := getenv.GetEnvStr("TEST")
 	if err != nil {
 		fmt.Println(err)
 	}
-}
-
-func testErr() error {
-	e := geterr.InitErr()
-	e.Msg = "An error occured"
-	return e.BuildErr(errors.New("error occured"))
 }

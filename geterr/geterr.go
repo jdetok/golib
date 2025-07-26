@@ -1,6 +1,7 @@
 package geterr
 
 import (
+	"errors"
 	"fmt"
 	"runtime"
 )
@@ -12,7 +13,7 @@ type Err struct {
 
 func (e *Err) BuildErr(err error) error {
 	startEnd := "************"
-	return fmt.Errorf("%s\n** ERROR OCCURED IN %s\n*** MSG: %s\n*** ERR MSG FROM FUNC: %e\n%s",
+	return fmt.Errorf("%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** ERR MSG FROM FUNC: %e\n%s",
 		startEnd,
 		e.Func,
 		e.Msg,
@@ -25,4 +26,10 @@ func InitErr() Err {
 	pc, _, _, _ := runtime.Caller(1)
 	e.Func = runtime.FuncForPC(pc).Name()
 	return e
+}
+
+func TestErr() error {
+	e := InitErr()
+	e.Msg = "An error occured"
+	return e.BuildErr(errors.New("error occured"))
 }

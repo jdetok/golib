@@ -6,9 +6,10 @@ type Err struct {
 	Func string
 	Msg  string
 }
-func (e *Err) BuildEr(err error) error {
-	return fmt.Errorf("** ERROR IN %s\n-- ***MSG: %s\n ****SOURCE FUNC ERR: %e",
-		e.Func, e.Msg)
+func (e *Err) BuildErr(err error) error {
+	startEnd := "************"
+	return fmt.Errorf("%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** ERR MSG FROM FUNC: %e\n%s",
+		startEnd, e.Func, e.Msg, err, startEnd)
 }
 ```
 # InitErr func
@@ -20,5 +21,25 @@ func InitErr() Err {
 	pc, _, _, _ := runtime.Caller(1)
 	e.Func = runtime.FuncForPC(pc).Name()
 	return e
+}
+```
+# Example Console Output
+```
+************
+** ERROR OCCURED IN github.com/jdetok/golib/getenv.GetEnvStr
+** MSG: key 'TEST' not found in .env
+** ERR MSG FROM FUNC: &{%!e(string=key 'TEST' not found in .env)}
+************
+```
+# Example Implementation
+```go
+func GetEnvStr(key string) (string, error) {
+	e := geterr.InitErr()
+	val, ok := os.LookupEnv(key)
+	if !ok {
+		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)
+		return "", e.BuildErr(errors.New(e.Msg))
+	}
+	return val, nil
 }
 ```
