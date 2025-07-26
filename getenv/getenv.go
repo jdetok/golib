@@ -19,6 +19,33 @@ func LoadDotEnv() error {
 	return nil
 }
 
+func EnvStr(key string) string {
+	e := geterr.InitErr()
+	val, ok := os.LookupEnv(key)
+	if !ok {
+		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)
+		fmt.Println(e.NewErr())
+	}
+	return val
+}
+
+func EnvInt(key string) int {
+	e := geterr.InitErr()
+	val, ok := os.LookupEnv(key)
+	if !ok {
+		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)
+		fmt.Println(e.NewErr())
+	}
+
+	// convert key from string to int
+	valAsInt, err := strconv.Atoi(val)
+	if err != nil {
+		e.Msg = fmt.Sprintf("couldn't convert '%s' value to int", key)
+		fmt.Println(e.NewErr())
+	}
+	return valAsInt
+}
+
 func GetEnvStr(key string) (string, error) {
 	e := geterr.InitErr()
 	val, ok := os.LookupEnv(key)
