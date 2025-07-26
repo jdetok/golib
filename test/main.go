@@ -7,8 +7,9 @@ import (
 )
 
 func main() {
-	msg := maild.MakeEmail("test subject", "hello this is my test body")
-	if err := maild.SendEmail(msg); err != nil {
+	err := maild.SendBasicEmail("another test subject",
+		"NEW STYLE!this is my test body")
+	if err != nil {
 		fmt.Println(err)
 	}
 	/*

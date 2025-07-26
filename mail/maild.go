@@ -8,13 +8,13 @@ import (
 	"github.com/jdetok/golib/geterr"
 )
 
-func SendEmail(msg string) error {
+func SendBasicEmail(subject, body string) error {
 	e := geterr.InitErr()
+
 	getenv.LoadDotEnv()
 	user := getenv.EnvStr("GMAIL_SNDR")
 	pw := getenv.EnvStr("GMAIL_PASS")
 	addr := getenv.EnvStr("GMAIL_URL")
-
 	auth := smtp.PlainAuth(
 		"",
 		user,
@@ -22,6 +22,7 @@ func SendEmail(msg string) error {
 		addr,
 	)
 
+	msg := MakeEmail(subject, body)
 	err := smtp.SendMail(
 		fmt.Sprintf(
 			"%s:%s", addr, getenv.EnvStr("GMAIL_PORT")),
