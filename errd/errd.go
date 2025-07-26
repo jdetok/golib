@@ -1,4 +1,4 @@
-package geterr
+package errd
 
 import (
 	"errors"

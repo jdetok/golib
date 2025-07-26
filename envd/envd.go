@@ -1,4 +1,4 @@
-package getenv
+package envd
 
 import (
 	"errors"
@@ -6,12 +6,12 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/jdetok/golib/geterr"
+	"github.com/jdetok/golib/errd"
 	"github.com/joho/godotenv"
 )
 
 func LoadDotEnv() error {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 	if err := godotenv.Load(); err != nil {
 		e.Msg = "failed to load .env variabels"
 		return e.BuildErr(err)
@@ -20,7 +20,7 @@ func LoadDotEnv() error {
 }
 
 func EnvStr(key string) string {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 	val, ok := os.LookupEnv(key)
 	if !ok {
 		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)
@@ -30,7 +30,7 @@ func EnvStr(key string) string {
 }
 
 func EnvInt(key string) int {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 	val, ok := os.LookupEnv(key)
 	if !ok {
 		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)
@@ -47,7 +47,7 @@ func EnvInt(key string) int {
 }
 
 func GetEnvStr(key string) (string, error) {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 	val, ok := os.LookupEnv(key)
 	if !ok {
 		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)
@@ -57,7 +57,7 @@ func GetEnvStr(key string) (string, error) {
 }
 
 func GetEnvInt(key string) (int, error) {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 	val, ok := os.LookupEnv(key)
 	if !ok {
 		e.Msg = fmt.Sprintf("key '%s' not found in .env", key)

@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jdetok/golib/getenv"
-	"github.com/jdetok/golib/geterr"
+	"github.com/jdetok/golib/envd"
+	"github.com/jdetok/golib/errd"
 )
 
 type MIMEmail struct {
@@ -28,11 +28,11 @@ type MIMEmail struct {
 // constructor
 func MakeMail(mailTo []string, subject, body string) MIMEmail {
 	var m MIMEmail
-	getenv.LoadDotEnv()
-	m.User = getenv.EnvStr("GMAIL_SNDR")
-	m.Pass = getenv.EnvStr("GMAIL_PASS")
-	m.Host = getenv.EnvStr("GMAIL_HOST")
-	m.Port = getenv.EnvStr("GMAIL_PORT")
+	envd.LoadDotEnv()
+	m.User = envd.EnvStr("GMAIL_SNDR")
+	m.Pass = envd.EnvStr("GMAIL_PASS")
+	m.Host = envd.EnvStr("GMAIL_HOST")
+	m.Port = envd.EnvStr("GMAIL_PORT")
 	m.MlTo = mailTo
 	m.Subj = subject
 	m.Body = body
@@ -53,7 +53,7 @@ func (m *MIMEmail) AuthGmail() {
 }
 
 func (m *MIMEmail) SendBasicEmail() error {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 	m.AuthGmail()
 	m.MakeBasicEmail()
 	err := smtp.SendMail(m.Addr, m.Auth, m.User, m.MlTo, []byte(m.Mesg))
@@ -65,7 +65,7 @@ func (m *MIMEmail) SendBasicEmail() error {
 }
 
 func (m *MIMEmail) MakeMIMEMsg(fName string) error {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 	atch, err := m.Attach(fName)
 	if err != nil {
 		e.Msg = fmt.Sprintf("error attaching file at %s", fName)
@@ -98,7 +98,7 @@ func (m *MIMEmail) MakeMIMEMsg(fName string) error {
 }
 
 func (m *MIMEmail) SendMIMEEmail(fName string) error {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 
 	m.AuthGmail()
 	err := m.MakeMIMEMsg(fName)
@@ -117,7 +117,7 @@ func (m *MIMEmail) SendMIMEEmail(fName string) error {
 }
 
 func (m *MIMEmail) Attach(fName string) (string, error) {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 
 	m.File = fName
 	// read file at fName as []byte

@@ -1,11 +1,11 @@
-package logdeko
+package logd
 
 import (
 	"fmt"
 	"os"
 	"time"
 
-	"github.com/jdetok/golib/geterr"
+	"github.com/jdetok/golib/errd"
 )
 
 type Logger struct {
@@ -15,7 +15,7 @@ type Logger struct {
 }
 
 func InitLogF(dir string, file string) (Logger, error) {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 	var logd = Logger{
 		Dir:  dir,
 		File: file,
@@ -28,7 +28,7 @@ func InitLogF(dir string, file string) (Logger, error) {
 }
 
 func (l *Logger) WriteLog(msg string) error {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 
 	// open file to write (append)
 	f, err := os.OpenFile(l.LogF, os.O_WRONLY|os.O_APPEND, 0644)
@@ -47,7 +47,7 @@ func (l *Logger) WriteLog(msg string) error {
 }
 
 func (l *Logger) MakeLogF() error {
-	e := geterr.InitErr()
+	e := errd.InitErr()
 
 	// create directory if it doesn't exist
 	if err := os.MkdirAll(l.Dir, 0750); err != nil {

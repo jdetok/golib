@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/jdetok/golib/logdeko"
+	"github.com/jdetok/golib/logd"
 	"github.com/jdetok/golib/maild"
 )
 
 func main() {
-	l, err := logdeko.InitLogF("testd", "testf")
+	l, err := logd.InitLogF("testd", "testf")
 	if err != nil {
 		fmt.Println(err)
 	}
