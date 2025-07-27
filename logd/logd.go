@@ -19,25 +19,39 @@ type Logd struct {
 	Msg string
 }
 
+// TODO - write to top of file on init
 func InitLogger(dir string, file string) (Logger, error) {
 	e := errd.InitErr()
-	var logd = Logger{
+	var l = Logger{
 		Dir:  dir,
 		File: file,
 	}
-	if err := logd.MakeLogF(); err != nil {
+	if err := l.MakeLogF(); err != nil {
 		e.Msg = "failed to init logger"
 		return Logger{}, e.BuildErr(err)
 	}
-	return logd, nil
+	l.LogHead()
+	return l, nil
+}
+
+func (l *Logger) LogHead() {
+	e := errd.InitErr()
+
+	f, err := os.OpenFile(l.LogF, os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		e.Msg = fmt.Sprintf("failed to open %s", l.LogF)
+		fmt.Println(e.BuildErr(err))
+	}
+	fmt.Fprintf(f, "***** RUN TIME %v\n\n", time.Now())
 }
 
 func (l *Logger) WriteLog(msg string) {
 	e := errd.InitErr()
-	// open file to write (append)
+
 	f, err := os.OpenFile(l.LogF, os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		e.Msg = fmt.Sprintf("failed to open %s", l.LogF)
+		fmt.Println(e.BuildErr(err))
 	}
 
 	// LogFunc will log the name of the function before the message
@@ -48,12 +62,12 @@ func (l *Logger) WriteLog(msg string) {
 
 	// print to console & write to log file
 	fmt.Println(ld.Msg)
-	n, err := fmt.Fprintln(f, ld.Msg)
+	_, err = fmt.Fprintln(f, ld.Msg)
 	if err != nil {
 		e.Msg = "error writing to log file"
 		fmt.Println(e.BuildErr(err))
 	}
-	fmt.Printf("wrote %d bytes to %s\n", n, l.LogF)
+	// fmt.Printf("wrote %d bytes to %s\n", n, l.LogF)
 }
 
 func (l *Logger) MakeLogF() error {
