@@ -36,8 +36,10 @@ func (l *Logger) WriteLog(msg string) error {
 		e.Msg = fmt.Sprintf("failed to open %s", l.LogF)
 	}
 
-	// pass f & msg to Fprintf to write msg string followed by line break to the file
-	_, err = fmt.Fprintf(f, "-- %s\n", msg)
+	// pass f & logmsg to Fprintln to write msg string followed by line break to the file
+	logmsg := fmt.Sprintf("-- %s", msg)
+	fmt.Println(logmsg)
+	_, err = fmt.Fprintln(f, logmsg)
 	if err != nil {
 		e.Msg = "error writing to log file"
 		return e.BuildErr(err)

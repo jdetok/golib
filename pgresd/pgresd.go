@@ -33,7 +33,6 @@ func (pg *PostGres) MakeConnStr() {
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		pg.Host, pg.Port, pg.User, pg.Password, pg.Database)
 }
-
 func (pg *PostGres) Conn() (*sql.DB, error) {
 	db, err := sql.Open("postgres", pg.ConnStr)
 	if err != nil {
