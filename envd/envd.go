@@ -19,6 +19,15 @@ func LoadDotEnv() error {
 	return nil
 }
 
+func LoadDotEnvFile(f string) error {
+	e := errd.InitErr()
+	if err := godotenv.Load(f); err != nil {
+		e.Msg = fmt.Sprintf("failed to load .env variabels from %s", f)
+		return e.BuildErr(err)
+	}
+	return nil
+}
+
 func EnvStr(key string) string {
 	e := errd.InitErr()
 	val, ok := os.LookupEnv(key)
