@@ -1,0 +1,1 @@
+GOPRIVATE=github.com/jdetok/* go get -x github.com/jdetok/golib@latest
