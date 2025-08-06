@@ -6,6 +6,9 @@ import (
 	"runtime"
 )
 
+const DELIM string = "************"
+const EMSG string = "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** %s ERR MSG: %e\n%s"
+
 type Err struct {
 	Func string
 	Msg  string
@@ -21,23 +24,38 @@ func InitErr() Err {
 
 // to be used when an error comes from a called function with its own err returned
 func (e *Err) BuildErr(err error) error {
-	startEnd := "************"
-	return fmt.Errorf("%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** ERR MSG FROM FUNC: %e\n%s",
-		startEnd,
+	// startEnd := "************"
+	return fmt.Errorf(
+		// "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** %s ERR MSG: %e\n%s",
+		EMSG,
+		DELIM,
 		e.Func,
 		e.Msg,
+		e.Func,
 		err,
-		startEnd)
+		DELIM)
+}
+
+func (e *Err) BuildErrStr(err error) string {
+	// startEnd := "************"
+	return fmt.Sprintf(
+		// "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** ERR MSG FROM %s: %e\n%s",
+		EMSG,
+		DELIM,
+		e.Func,
+		e.Msg,
+		e.Func,
+		err,
+		DELIM)
 }
 
 // to be used when there is no existing error to pass to BuildErr
 func (e *Err) NewErr() error {
-	startEnd := "************"
 	return fmt.Errorf("%s\n** ERROR OCCURED IN %s\n** MSG: %s\n%s",
-		startEnd,
+		DELIM,
 		e.Func,
 		e.Msg,
-		startEnd)
+		DELIM)
 }
 
 func TestErr() error {
