@@ -94,7 +94,3 @@ func (l *Logger) BuildPath() string {
 	return fmt.Sprintf("%s/%s_%s.log",
 		l.Dir, l.File, time.Now().Format("010206_150405"))
 }
-
-func logc(msg string) {
-	fmt.Println("** |", msg)
-}
