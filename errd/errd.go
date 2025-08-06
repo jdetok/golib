@@ -11,6 +11,7 @@ type Err struct {
 	Msg  string
 }
 
+// captures name of function that called it
 func InitErr() Err {
 	var e Err
 	pc, _, _, _ := runtime.Caller(1)
