@@ -17,6 +17,17 @@ type PostGres struct {
 	ConnStr  string
 }
 
+func GetEnvFilePG(f string) PostGres {
+	var pg PostGres
+	envd.LoadDotEnvFile(f)
+	pg.Host = envd.EnvStr("PG_HOST")
+	pg.Port = envd.EnvInt("PG_PORT")
+	pg.User = envd.EnvStr("PG_USER")
+	pg.Password = envd.EnvStr("PG_PASS")
+	pg.Database = envd.EnvStr("PG_DB")
+	return pg
+}
+
 func GetEnvPG() PostGres {
 	var pg PostGres
 	envd.LoadDotEnv()
