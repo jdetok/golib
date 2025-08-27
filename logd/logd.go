@@ -20,6 +20,10 @@ type Logd struct {
 }
 
 // TODO - write to top of file on init
+// TODO - build in option to pick up on existing log file - so i can create log
+// at beginning of shell script & pick up on that, then keep writing to it after
+
+// create a log file & return Logger
 func InitLogger(dir string, file string) (Logger, error) {
 	e := errd.InitErr()
 	var l = Logger{
@@ -30,6 +34,28 @@ func InitLogger(dir string, file string) (Logger, error) {
 		e.Msg = "failed to init logger"
 		return Logger{}, e.BuildErr(err)
 	}
+	l.LogHead()
+	return l, nil
+}
+
+// accept existing logfile, retrurn Logger
+func InitLogf(dir string, file string) (Logger, error) {
+	e := errd.InitErr()
+	var l = Logger{
+		Dir:  dir,
+		File: file,
+	}
+
+	// DON'T NEED TO CALL BuildPath - DATE ALREADY APPENDED
+	// open the file to make sure it exists
+	f, err := os.OpenFile(fmt.Sprintf("%s/%s", l.Dir, l.File),
+		os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		e.Msg = fmt.Sprintf("failed to open %s", l.LogF)
+		fmt.Println(e.BuildErr(err))
+	}
+	f.Close()
+
 	l.LogHead()
 	return l, nil
 }
