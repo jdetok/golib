@@ -39,23 +39,20 @@ func InitLogger(dir string, file string) (Logger, error) {
 }
 
 // accept existing logfile, retrurn Logger
-func InitLogf(dir string, file string) (Logger, error) {
+func InitLogf(logf string) (Logger, error) {
 	e := errd.InitErr()
 	var l = Logger{
-		Dir:  dir,
-		File: file,
+		LogF: logf,
 	}
 
 	// DON'T NEED TO CALL BuildPath - DATE ALREADY APPENDED
 	// open the file to make sure it exists
-	f, err := os.OpenFile(fmt.Sprintf("%s/%s", l.Dir, l.File),
-		os.O_WRONLY|os.O_APPEND, 0644)
+	f, err := os.OpenFile(l.LogF, os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		e.Msg = fmt.Sprintf("failed to open %s", l.LogF)
 		fmt.Println(e.BuildErr(err))
 	}
 	f.Close()
-
 	l.LogHead()
 	return l, nil
 }
