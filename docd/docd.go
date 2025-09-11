@@ -55,6 +55,15 @@ func InitDocd(path, fname, pname, version string) (*Docd, error) {
 			"\n****\n**** can't open file at %s. CHECK IF DIRECTORY EXISTS\n****",
 			d.FullPath)
 	}
+
+	nb, err := f.Write([]byte("testing"))
+	if err != nil {
+		return nil, fmt.Errorf(
+			"\n****\n**** error writing to file at %s:\n****%e", d.FileName, err)
+	}
+
+	fmt.Printf("successfully wrote %d bytes to %s", nb, d.FileName)
+
 	f.Close()
 	return &d, nil
 }
