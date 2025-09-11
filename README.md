@@ -7,3 +7,8 @@ standardized error creation
 standardized logging package to create & write to log file
 # [maild package](/z_docs/maild.md)
 send basic email (only subject/body text) or email with attachment  
+
+# TODO / IDEAS
+## Documentation package
+- make a struct to pass through to each function of a package, will generate JSON or MD documentation in the project
+  - each function passes a string defining what it does
