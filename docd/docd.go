@@ -1,5 +1,10 @@
 package docd
 
+import (
+	"fmt"
+	"os"
+)
+
 /* PACKAGE INTENTION:
 init a Docd struct at the start of a main function, pass it by reference to
 generate documentation for each function it's passed to
@@ -31,4 +36,25 @@ type FileDoc struct {
 type FuncDoc struct {
 	FuncName string `json:"func_name"`
 	Desc     string `json:"func_desc"`
+}
+
+// run at top of main
+func InitDocd(path, fname, pname, version string) (*Docd, error) {
+	d := Docd{}
+	d.FullPath = path + "/" + fname
+
+	// create dir if it doesn't exist
+	if err := os.MkdirAll(path, 0777); err != nil {
+		return nil, fmt.Errorf(
+			"\n****\n**** error creating or opening directory at %s\n****", path)
+	}
+
+	f, err := os.OpenFile(d.FullPath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"\n****\n**** can't open file at %s. CHECK IF DIRECTORY EXISTS\n****",
+			d.FullPath)
+	}
+	f.Close()
+	return &d, nil
 }
