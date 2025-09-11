@@ -65,5 +65,6 @@ func InitDocd(path, fname, pname, version string) (*Docd, error) {
 	fmt.Printf("successfully wrote %d bytes to %s", nb, d.FileName)
 
 	f.Close()
+
 	return &d, nil
 }
