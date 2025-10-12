@@ -95,10 +95,10 @@ func (ins *InsertStmnt) InsertFast(db *sql.DB, global_row_count *int64) error {
 		go func(i int, c [][]any) {
 			defer wg.Done()
 			st := time.Now()
-			fmt.Printf("starting chunk %d/%d - %v", i+1, len(ins.Chunks), st)
+			fmt.Printf("starting chunk %d/%d - %v\n", i+1, len(ins.Chunks), st)
 			res, err := db.Exec(ins.BuildStmnt(c), ValsFromSet(c)...)
 			if err != nil {
-				chErr := fmt.Errorf("error inserting chunk %d/%d | %w", i+1, len(ins.Chunks), err)
+				chErr := fmt.Errorf("error inserting chunk %d/%d\n** %w", i+1, len(ins.Chunks), err)
 				errCh <- chErr
 			}
 			ra, _ := res.RowsAffected()
