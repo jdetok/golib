@@ -40,6 +40,10 @@ func MakeInsert(schema, tbl, primKey string, cols []string, rows [][]any) Insert
 	return ins
 }
 
+func (ins *InsertStmnt) SchemaDotTable() string {
+	return fmt.Sprintf("%s.%s", ins.Schema, ins.Tbl)
+}
+
 // flatten [][]any to []any with all values
 func (ins *InsertStmnt) FlattenVals() {
 	for _, r := range ins.Rows {
