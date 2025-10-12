@@ -7,7 +7,12 @@ import (
 	"time"
 )
 
+/* ORIGINAL DRAFT BUILT AND IN USE IN bball-etl-cli
+- modified here for package use
+*/
+
 type InsertStmnt struct {
+	Schema  string
 	Tbl     string
 	PrimKey string // define like "key" or "key1, key2"
 	Cols    []string
@@ -22,8 +27,9 @@ type Table struct {
 	PlTm    string
 }
 
-func MakeInsert(tbl, primKey string, cols []string, rows [][]any) InsertStmnt {
+func MakeInsert(schema, tbl, primKey string, cols []string, rows [][]any) InsertStmnt {
 	var ins = InsertStmnt{
+		Schema:  schema,
 		Tbl:     tbl,
 		PrimKey: primKey,
 		Cols:    cols,
