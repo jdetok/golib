@@ -141,7 +141,7 @@ func (ins *InsertStmnt) InsertFast(db *sql.DB, global_row_count *int64) error {
 
 // construct the SQL statement to execute
 func (ins *InsertStmnt) BuildStmnt(chunk [][]any) string {
-	stmnt := fmt.Sprintf("insert into %s (", ins.Tbl)
+	stmnt := fmt.Sprintf("insert into %s (", ins.SchemaDotTable())
 	ins.addCols(&stmnt)
 	ins.addChunkParams(&stmnt, chunk)
 	return fmt.Sprintf("%s on conflict (%s) do nothing", stmnt, ins.PrimKey)
