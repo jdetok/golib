@@ -7,7 +7,7 @@ import (
 )
 
 const DELIM string = "************"
-const EMSG string = "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** %s ERR MSG: %e\n%s"
+const EMSG string = "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** %s ERR MSG: %w\n%s"
 
 type Err struct {
 	Func string
@@ -26,7 +26,7 @@ func InitErr() Err {
 func (e *Err) BuildErr(err error) error {
 	// startEnd := "************"
 	return fmt.Errorf(
-		// "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** %s ERR MSG: %e\n%s",
+		// "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** %s ERR MSG: %w\n%s",
 		EMSG,
 		DELIM,
 		e.Func,
@@ -39,7 +39,7 @@ func (e *Err) BuildErr(err error) error {
 func (e *Err) BuildErrStr(err error) string {
 	// startEnd := "************"
 	return fmt.Sprintf(
-		// "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** ERR MSG FROM %s: %e\n%s",
+		// "%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** ERR MSG FROM %s: %w\n%s",
 		EMSG,
 		DELIM,
 		e.Func,

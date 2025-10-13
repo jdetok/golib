@@ -8,7 +8,7 @@ type Err struct {
 }
 func (e *Err) BuildErr(err error) error {
 	startEnd := "************"
-	return fmt.Errorf("%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** ERR MSG FROM FUNC: %e\n%s",
+	return fmt.Errorf("%s\n** ERROR OCCURED IN %s\n** MSG: %s\n** ERR MSG FROM FUNC: %w\n%s",
 		startEnd, e.Func, e.Msg, err, startEnd)
 }
 ```

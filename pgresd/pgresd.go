@@ -51,7 +51,7 @@ func (pg *PostGres) Conn() (*sql.DB, error) {
 	}
 	if err := db.Ping(); err != nil {
 		return nil, fmt.Errorf(
-			"error pining postgres after successful conn: %e", err)
+			"error pining postgres after successful conn: %w", err)
 	}
 	return db, err
 }

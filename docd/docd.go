@@ -59,7 +59,7 @@ func InitDocd(path, fname, pname, version string) (*Docd, error) {
 	nb, err := f.Write([]byte("testing"))
 	if err != nil {
 		return nil, fmt.Errorf(
-			"\n****\n**** error writing to file at %s:\n****%e", d.FileName, err)
+			"\n****\n**** error writing to file at %s:\n****%w", d.FileName, err)
 	}
 
 	fmt.Printf("successfully wrote %d bytes to %s", nb, d.FileName)
