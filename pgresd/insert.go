@@ -111,7 +111,11 @@ func (ins *InsertStmnt) InsertFast(db *sql.DB, global_row_count *int64) error {
 				chErr := fmt.Errorf("error inserting chunk %d/%d\n** %w", i+1, len(ins.Chunks), err)
 				errCh <- chErr
 			}
-			ra, _ := res.RowsAffected()
+			ra, err := res.RowsAffected()
+			if err != nil {
+				chErr := fmt.Errorf("error getting rows affected | %w", err)
+				errCh <- chErr
+			}
 			mu.Lock()
 			*global_row_count += ra // add rows affected to total
 			fmt.Println(
