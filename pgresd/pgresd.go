@@ -65,3 +65,13 @@ func ConnectDB() (*sql.DB, error) {
 	}
 	return db, nil
 }
+
+func ConnectTestDB(envf string) (*sql.DB, error) {
+	pg := GetEnvFilePG(envf)
+	pg.MakeConnStr()
+	db, err := pg.Conn()
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
