@@ -55,3 +55,13 @@ func (pg *PostGres) Conn() (*sql.DB, error) {
 	}
 	return db, err
 }
+
+func ConnectDB() (*sql.DB, error) {
+	pg := GetEnvPG()
+	pg.MakeConnStr()
+	db, err := pg.Conn()
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
