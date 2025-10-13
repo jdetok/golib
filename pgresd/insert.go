@@ -139,7 +139,7 @@ func (ins *InsertStmnt) InsertFast(db *sql.DB, global_row_count *int64) error {
 	close(errCh)
 	if len(errCh) > 0 {
 		err := <-errCh
-		return fmt.Errorf("one or more chunks failed to insert| %w", err)
+		return fmt.Errorf("one or more chunks failed to insert | %w", err)
 	}
 
 	return nil
