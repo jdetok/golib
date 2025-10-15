@@ -104,8 +104,8 @@ func (ins *InsertStmnt) InsertFast(db *sql.DB, global_row_count *int64) error {
 		wg.Add(1)
 		go func(i int, c [][]any) {
 			defer wg.Done()
-			st := time.Now()
-			fmt.Printf("starting chunk %d/%d - %v\n", i+1, len(ins.Chunks), st)
+			// st := time.Now()
+			// fmt.Printf("starting chunk %d/%d - %v\n", i+1, len(ins.Chunks), st)
 			res, err := db.Exec(ins.BuildStmnt(c), ValsFromSet(c)...)
 			if err != nil {
 				chErr := fmt.Errorf("error inserting chunk %d/%d\n** %w", i+1, len(ins.Chunks), err)
@@ -120,16 +120,16 @@ func (ins *InsertStmnt) InsertFast(db *sql.DB, global_row_count *int64) error {
 			}
 			mu.Lock()
 			*global_row_count += ra // add rows affected to total
-			fmt.Println(
-				fmt.Sprint(
-					fmt.Sprintf("chunk %d/%d complete | rowsets: %d | vals: %d\n",
-						i+1, len(ins.Chunks), len(c), len(ValsFromSet(c))),
-					fmt.Sprintln("- ", time.Now()),
-					fmt.Sprintln("- ", time.Since(st)),
-					fmt.Sprintf("-- %d new rows inserted into %s\n", ra, ins.Tbl),
-					fmt.Sprintln("-- total rows affected: ", *global_row_count),
-				),
-			)
+			// fmt.Println(
+			// 	fmt.Sprint(
+			// 		fmt.Sprintf("chunk %d/%d complete | rowsets: %d | vals: %d\n",
+			// 			i+1, len(ins.Chunks), len(c), len(ValsFromSet(c))),
+			// 		fmt.Sprintln("- ", time.Now()),
+			// 		fmt.Sprintln("- ", time.Since(st)),
+			// 		fmt.Sprintf("-- %d new rows inserted into %s\n", ra, ins.Tbl),
+			// 		fmt.Sprintln("-- total rows affected: ", *global_row_count),
+			// 	),
+			// )
 			mu.Unlock()
 			time.Sleep(1 * time.Second)
 		}(i, c)
