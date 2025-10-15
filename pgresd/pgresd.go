@@ -73,5 +73,8 @@ func ConnectTestDB(envf string) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	db.SetMaxIdleConns(50)
+	db.SetMaxOpenConns(200)
 	return db, nil
 }
