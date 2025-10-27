@@ -3,6 +3,7 @@ package errd
 import (
 	"errors"
 	"fmt"
+	"os"
 	"runtime"
 )
 
@@ -34,6 +35,11 @@ func (e *Err) BuildErr(err error) error {
 		e.Func,
 		err,
 		DELIM)
+}
+
+func (e *Err) Fatal(err error) {
+	fmt.Println(e.BuildErr(err))
+	os.Exit(1)
 }
 
 func (e *Err) BuildErrStr(err error) string {
